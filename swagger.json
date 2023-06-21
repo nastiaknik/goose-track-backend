@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GooseTrack",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-tasks-hv5t.onrender.com/",
+      "description": "Personal to-do list website"
+    }
+  ],
+  "paths": {}
+}
