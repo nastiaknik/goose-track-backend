@@ -1,8 +1,8 @@
 // const { HttpError } = require("../helpers/HttpError");
 const { Task } = require("../models/task");
 
-const getTasksService = async (id) => {
-  return await Task.find({ owner: id });
+const getTasksService = async (userId) => {
+  return await Task.find({ owner: userId });
 };
 
 module.exports = { getTasksService };
