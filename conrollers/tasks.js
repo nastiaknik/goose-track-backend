@@ -2,8 +2,9 @@ const { getTasksService } = require("../services/taskServices");
 const controllerWrapper = require("../helpers/controllerWrapper");
 
 const getAllTasksController = controllerWrapper(async (req, res, next) => {
-  const tasks = await getTasksService();
-  res.json(tasks);
+  const userId = req.user.id;
+  const tasks = await getTasksService(userId);
+  res.json({ tasks });
 });
 
 module.exports = {
