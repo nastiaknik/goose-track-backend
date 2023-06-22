@@ -5,4 +5,8 @@ const getTasksService = async (userId) => {
   return await Task.find({ owner: userId });
 };
 
-module.exports = { getTasksService };
+const createTaskService = async (data, userId) => {
+  return await Task.create({ ...data, owner: userId });
+};
+
+module.exports = { getTasksService, createTaskService };
