@@ -21,6 +21,11 @@ const UserRegistrationSchema = Joi.object({
   }),
 });
 
+const EmailSchema = Joi.object().keys({
+  email: UserRegistrationSchema.extract("email"),
+});
+
 module.exports = {
   UserRegistrationSchema,
+  EmailSchema,
 };

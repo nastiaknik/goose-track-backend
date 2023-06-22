@@ -19,7 +19,15 @@ const userSchema = new Schema(
     birthday: Date,
     phone: String,
     skype: String,
-    access_token: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
+    refresh_token: String,
   },
   { versionKey: false, timestamps: true }
 );
