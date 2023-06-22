@@ -1,10 +1,10 @@
 const express = require("express");
 const { getAllTasksController } = require("../../conrollers/tasks");
-const authenticate = require("../../midllewares/authenticate");
+const { authCheck } = require("../../midllewares/authCheck");
 
 const router = express.Router();
 
-router.get("/", authenticate, getAllTasksController);
+router.get("/", authCheck, getAllTasksController);
 
 module.exports = {
   taskRouter: router,
