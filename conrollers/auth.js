@@ -16,6 +16,8 @@ const signupController = controllerWrapper(async (req, res, next) => {
 
 const activationController = controllerWrapper(async (req, res, next) => {
   const { verificationToken } = req.params;
+  console.log(`Hello from controller! verificationToken: ${verificationToken}`);
+  // debugger;
   await verifyUserEmailService(verificationToken);
   res.status(200).redirect(FRONTEND_REDIR_URL);
 });

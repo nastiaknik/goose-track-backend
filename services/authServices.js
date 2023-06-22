@@ -31,11 +31,16 @@ const signupService = async (body) => {
 };
 
 const verifyUserEmailService = async (verificationToken) => {
+  console.log(`Hello from service! verificationToken: ${verificationToken}`);
+
   const currentUser = await User.findOne({ verificationToken });
+  console.log(`Hello from service! currentUser: ${currentUser}`);
+
   if (!currentUser) {
     throw new HttpError(404, "User is not found");
   }
 
+  console.log(`Hello from service! We are here!`);
   await User.findByIdAndUpdate(currentUser._id, {
     verify: true,
     verificationToken: "",
