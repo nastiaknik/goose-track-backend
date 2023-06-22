@@ -3,6 +3,8 @@ const {
   signupService,
   verifyUserEmailService,
   resendVerifyEmailService,
+  loginService,
+  logoutService,
 } = require("../services/authServices");
 
 const { FRONTEND_REDIR_URL } = process.env;
@@ -25,8 +27,21 @@ const resendActivatinEmailController = controllerWrapper(
   }
 );
 
+const loginController = controllerWrapper(async (req, res, next) => {
+  const { user, accessToken } = await loginService(req.body);
+  res.status(200).json({ user, accessToken });
+});
+
+const logoutController = controllerWrapper(async (req, res, next) => {
+  const userId = req.user._id;
+  await logoutService(userId);
+  res.status(200).json({ message: "Logout was successful" });
+});
+
 module.exports = {
   signupController,
   activationController,
   resendActivatinEmailController,
+  loginController,
+  logoutController,
 };

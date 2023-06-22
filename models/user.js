@@ -27,7 +27,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
-    refresh_token: String,
+    refreshToken: String,
   },
   { versionKey: false, timestamps: true }
 );

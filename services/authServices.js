@@ -4,7 +4,7 @@ const crypto = require("crypto");
 
 const HttpError = require("../helpers/HttpError");
 const { User } = require("../models/user");
-// const { asignTokens } = require("../helpers/asignTokens");
+const { asignTokens } = require("../helpers/asignTokens");
 const { sendEmail } = require("../helpers/SendGridAPI");
 
 // const { BASE_URL } = process.env;
@@ -57,8 +57,48 @@ const resendVerifyEmailService = async (body) => {
   await sendEmail(email, currentUser.verificationToken);
 };
 
+const loginService = async (body) => {
+  const fetchedUser = await User.findOne({ email: body.email });
+  if (!fetchedUser) {
+    throw new HttpError(401, "User with this email is not found");
+  }
+
+  if (!fetchedUser.verify) {
+    throw new HttpError(401, "Email is not verified");
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    body.password,
+    fetchedUser.password
+  );
+  if (!isPasswordCorrect) {
+    throw new HttpError(401, "Password is not correct");
+  }
+
+  const { refreshToken, accessToken } = asignTokens(fetchedUser);
+
+  await User.findByIdAndUpdate(fetchedUser._id, {
+    refreshToken,
+  });
+
+  return {
+    user: {
+      _id: fetchedUser._id,
+      email: fetchedUser.email,
+      username: fetchedUser.username,
+    },
+    accessToken,
+  };
+};
+
+const logoutService = async (userId) => {
+  await User.findByIdAndUpdate(userId, { refreshToken: null });
+};
+
 module.exports = {
   signupService,
   verifyUserEmailService,
   resendVerifyEmailService,
+  loginService,
+  logoutService,
 };
