@@ -31,16 +31,12 @@ const signupService = async (body) => {
 };
 
 const verifyUserEmailService = async (verificationToken) => {
-  console.log(`Hello from service! verificationToken: ${verificationToken}`);
-
   const currentUser = await User.findOne({ verificationToken });
-  console.log(`Hello from service! currentUser: ${currentUser}`);
 
   if (!currentUser) {
     throw new HttpError(404, "User is not found");
   }
 
-  console.log(`Hello from service! We are here!`);
   await User.findByIdAndUpdate(currentUser._id, {
     verify: true,
     verificationToken: "",
@@ -89,8 +85,11 @@ const loginService = async (body) => {
   return {
     user: {
       _id: fetchedUser._id,
-      email: fetchedUser.email,
       username: fetchedUser.username,
+      email: fetchedUser.email,
+      birthday: fetchedUser.birthday,
+      phone: fetchedUser.phone,
+      skype: fetchedUser.skype,
     },
     accessToken,
   };
@@ -100,10 +99,29 @@ const logoutService = async (userId) => {
   await User.findByIdAndUpdate(userId, { refreshToken: null });
 };
 
+const refreshService = async (userId) => {
+  const fetchedUser = await User.findById(userId);
+  if (!fetchedUser) {
+    throw new HttpError(401, "User with this email is not found");
+  }
+
+  return {
+    user: {
+      _id: fetchedUser._id,
+      username: fetchedUser.username,
+      email: fetchedUser.email,
+      birthday: fetchedUser.birthday,
+      phone: fetchedUser.phone,
+      skype: fetchedUser.skype,
+    },
+  };
+};
+
 module.exports = {
   signupService,
   verifyUserEmailService,
   resendVerifyEmailService,
   loginService,
   logoutService,
+  refreshService,
 };

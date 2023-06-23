@@ -47,7 +47,11 @@ const authCheck = async (req, res, next) => {
       res.status(200).json({
         user: {
           _id: fetchedUser._id,
+          username: fetchedUser.username,
           email: fetchedUser.email,
+          birthday: fetchedUser.birthday,
+          phone: fetchedUser.phone,
+          skype: fetchedUser.skype,
         },
         accessToken,
       });

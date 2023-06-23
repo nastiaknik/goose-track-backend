@@ -11,6 +11,7 @@ const {
   resendActivatinEmailController,
   loginController,
   logoutController,
+  refreshController,
 } = require("../../conrollers/auth");
 
 const { authCheck } = require("../../midllewares/authCheck");
@@ -32,6 +33,8 @@ router
 router.post("/login", validateBody(UserLoginSchema), loginController);
 
 router.post("/logout", authCheck, logoutController);
+
+router.get("/refresh", authCheck, refreshController);
 
 module.exports = {
   authRouter: router,
