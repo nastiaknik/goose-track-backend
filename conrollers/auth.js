@@ -5,6 +5,7 @@ const {
   resendVerifyEmailService,
   loginService,
   logoutService,
+  refreshService,
 } = require("../services/authServices");
 
 const { FRONTEND_REDIR_URL } = process.env;
@@ -16,8 +17,6 @@ const signupController = controllerWrapper(async (req, res, next) => {
 
 const activationController = controllerWrapper(async (req, res, next) => {
   const { verificationToken } = req.params;
-  console.log(`Hello from controller! verificationToken: ${verificationToken}`);
-  // debugger;
   await verifyUserEmailService(verificationToken);
   res.status(200).redirect(FRONTEND_REDIR_URL);
 });
@@ -40,10 +39,17 @@ const logoutController = controllerWrapper(async (req, res, next) => {
   res.status(200).json({ message: "Logout was successful" });
 });
 
+const refreshController = controllerWrapper(async (req, res, next) => {
+  const userId = req.user._id;
+  const currentUser = await refreshService(userId);
+  res.status(200).json(currentUser);
+});
+
 module.exports = {
   signupController,
   activationController,
   resendActivatinEmailController,
   loginController,
   logoutController,
+  refreshController,
 };
