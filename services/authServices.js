@@ -27,7 +27,11 @@ const signupService = async (body) => {
 
   await sendEmail(newUser.email, verificationToken);
 
-  return newUser;
+  return {
+    username: newUser.username,
+    email: newUser.email,
+    _id: newUser._id,
+  };
 };
 
 const verifyUserEmailService = async (verificationToken) => {
