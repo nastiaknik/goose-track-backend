@@ -3,7 +3,6 @@ const { HttpError } = require("../helpers/HttpError");
 
 const listReviews = async (user, query) => {
   const { _id: owner } = user;
-  const defaultFavorite = { $in: [true, false] };
   const { page = 1, limit = 2 } = query;
   const skip = (page - 1) * limit;
 
@@ -19,7 +18,7 @@ const getReviewById = async (reviewId) => {
   if (!result) {
     throw new HttpError(404);
   }
-  return result || null;
+  return result;
 };
 
 const addReview = async (body, user) => {

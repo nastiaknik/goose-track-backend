@@ -6,10 +6,10 @@ const {
   removeReview,
 } = require("../services/reviewServise");
 
-const ctrWrapper = require("../midllewares/ctrWrapper");
+const controllerWrapper = require("../helpers/controllerWrapper");
 
 const getAllReviews = async (req, res, next) => {
-  const reviews = await listReview(req.user, req.query);
+  const reviews = await listReviews(req.user, req.query);
   res.status(200).json(reviews);
 };
 
@@ -37,9 +37,9 @@ const deleteReview = async (req, res, next) => {
 };
 
 module.exports = {
-  listReviews: ctrWrapper(getAllReviews),
-  getReviewById: ctrWrapper(getReview),
-  addReview: ctrWrapper(createReview),
-  updateReview: ctrWrapper(changeReview),
-  removeReview: ctrWrapper(deleteReview),
+  listReviews: controllerWrapper(getAllReviews),
+  getReviewById: controllerWrapper(getReview),
+  addReview: controllerWrapper(createReview),
+  updateReview: controllerWrapper(changeReview),
+  removeReview: controllerWrapper(deleteReview),
 };
