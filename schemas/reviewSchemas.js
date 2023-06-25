@@ -1,9 +1,15 @@
 const Joi = require("joi");
 
-const reviewsSchema = Joi.object({
-  id: Joi.string().required(),
-  name: Joi.string().min(2).max(30).required(),
+const reviewsAddSchema = Joi.object({
+  rating: Joi.number().required().min(0).max(5),
   comment: Joi.string().required().max(300),
 });
 
-module.exports = reviewsSchema;
+const reviewsEditSchema = Joi.object({
+  rating: Joi.number().min(0).max(5),
+  comment: Joi.string().max(300),
+})
+  .or("rating", "comment")
+  .required();
+
+module.exports = { reviewsAddSchema, reviewsEditSchema };

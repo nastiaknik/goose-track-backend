@@ -8,7 +8,10 @@ const {
 } = require("../../conrollers/reviews");
 const { authCheck } = require("../../midllewares/authCheck");
 const validateBody = require("../../midllewares/validateBody");
-const reviewsSchema = require("../../schemas/reviewSchemas");
+const {
+  reviewsAddSchema,
+  reviewsEditSchema,
+} = require("../../schemas/reviewSchemas");
 const isValidId = require("../../midllewares/isValidId");
 
 const router = express.Router();
@@ -16,12 +19,12 @@ const router = express.Router();
 router
   .route("/")
   .get(listReviews)
-  .post(authCheck, validateBody(reviewsSchema), addReview);
+  .post(authCheck, validateBody(reviewsAddSchema), addReview);
 
 router
-  .route("/:reviewId")
+  .route("/:id")
   .get(authCheck, isValidId, getReviewById)
-  .put(authCheck, isValidId, validateBody(reviewsSchema), updateReview)
+  .patch(authCheck, isValidId, validateBody(reviewsEditSchema), updateReview)
   .delete(authCheck, isValidId, removeReview);
 
 module.exports = {
