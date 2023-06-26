@@ -19,6 +19,9 @@ const userSchema = new Schema(
     birthday: Date,
     phone: String,
     skype: String,
+    imgURL: {
+      type: String,
+    },
     verify: {
       type: Boolean,
       default: false,

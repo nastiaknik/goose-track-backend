@@ -94,6 +94,7 @@ const loginService = async (body) => {
       birthday: fetchedUser.birthday,
       phone: fetchedUser.phone,
       skype: fetchedUser.skype,
+      imgURL: fetchedUser.imgURL,
     },
     accessToken,
   };
@@ -117,8 +118,27 @@ const refreshService = async (userId) => {
       birthday: fetchedUser.birthday,
       phone: fetchedUser.phone,
       skype: fetchedUser.skype,
+      imgURL: fetchedUser.imgURL,
     },
   };
+};
+
+const updateUserInfoService = async (userId, body) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { ...body },
+      { new: true }
+    );
+    return updatedUser;
+  } catch (error) {
+    throw new HttpError(400, "Failed to update user information");
+  }
+};
+
+const getUserInfoService = async (userId) => {
+  const user = await User.findById(userId);
+  return user;
 };
 
 module.exports = {
@@ -128,4 +148,6 @@ module.exports = {
   loginService,
   logoutService,
   refreshService,
+  updateUserInfoService,
+  getUserInfoService,
 };

@@ -4,6 +4,7 @@ const {
   UserRegistrationSchema,
   EmailSchema,
   UserLoginSchema,
+  UpdateUserInfoSchema,
 } = require("../../schemas/userSchemas");
 const {
   signupController,
@@ -12,7 +13,10 @@ const {
   loginController,
   logoutController,
   refreshController,
+  updateUserInfoController,
+  getUserInfoController,
 } = require("../../conrollers/auth");
+const upload = require("../../midllewares/upload");
 
 const { authCheck } = require("../../midllewares/authCheck");
 
@@ -35,6 +39,16 @@ router.post("/login", validateBody(UserLoginSchema), loginController);
 router.post("/logout", authCheck, logoutController);
 
 router.get("/refresh", authCheck, refreshController);
+
+router.post(
+  "/user",
+  authCheck,
+  upload.single("avatar"),
+  validateBody(UpdateUserInfoSchema),
+  updateUserInfoController
+);
+
+router.get("/current", authCheck, getUserInfoController);
 
 module.exports = {
   authRouter: router,
