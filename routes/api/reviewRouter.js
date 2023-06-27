@@ -22,7 +22,7 @@ router
   .post(authCheck, validateBody(reviewsAddSchema), addReview);
 
 router
-  .route("/:id")
+  .route("/my-review:id")
   .get(authCheck, isValidId, getReviewById)
   .patch(authCheck, isValidId, validateBody(reviewsEditSchema), updateReview)
   .delete(authCheck, isValidId, removeReview);

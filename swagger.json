@@ -291,9 +291,7 @@
             }
           }
         }
-      }
-    },
-    "/api/reviews/my-review": {
+      },
       "post": {
         "tags": ["Reviews"],
         "summary": "Add review",
@@ -342,7 +340,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/reviews/my-review": {
       "get": {
         "tags": ["Reviews"],
         "summary": "Get all reviews for current user",
