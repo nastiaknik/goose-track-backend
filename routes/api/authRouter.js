@@ -43,7 +43,7 @@ router.get("/refresh", authCheck, refreshController);
 router.patch(
   "/user",
   authCheck,
-  upload.single("avatar"),
+  upload.single("imgURL"),
   validateBody(UpdateUserInfoSchema),
   updateUserInfoController
 );

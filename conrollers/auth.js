@@ -10,7 +10,7 @@ const {
   updateUserInfoService,
 } = require("../services/authServices");
 const { User } = require("../models/user");
-const { cloudinaryImgSave } = require("../helpers/cloudinary/cloudinary");
+const cloudinaryImgSave = require("../helpers/cloudinary/cloudinary");
 const HttpError = require("../helpers/HttpError");
 
 const { FRONTEND_REDIR_URL } = process.env;
@@ -64,7 +64,7 @@ const updateUserInfoController = controllerWrapper(async (req, res, next) => {
   const { file } = req;
   if (file) {
     const avatar = await cloudinaryImgSave(file, {}, "avatars");
-    await User.findByIdAndUpdate(userId, { imageURL: avatar.secure_url });
+    await User.findByIdAndUpdate(userId, { imgURL: avatar.secure_url });
   }
   const updatedUser = await updateUserInfoService(userId, req.body);
   res.json(updatedUser);
