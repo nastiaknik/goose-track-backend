@@ -53,7 +53,6 @@ const getDayTasksService = async (userId, year, month, day) => {
 };
 
 const changeTasksCategoryService = async (body, id) => {
-  console.log("Hello 2");
   const changeTasksCategory = await Task.findByIdAndUpdate(id, body, {
     new: true,
   });
