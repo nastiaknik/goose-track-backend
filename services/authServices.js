@@ -130,7 +130,17 @@ const updateUserInfoService = async (userId, body) => {
       { ...body },
       { new: true }
     );
-    return updatedUser;
+    return {
+      user: {
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        birthday: updatedUser.birthday,
+        phone: updatedUser.phone,
+        skype: updatedUser.skype,
+        imgURL: updatedUser.imgURL,
+      },
+    };
   } catch (error) {
     throw new HttpError(400, "Failed to update user information");
   }
@@ -138,7 +148,17 @@ const updateUserInfoService = async (userId, body) => {
 
 const getUserInfoService = async (userId) => {
   const user = await User.findById(userId);
-  return user;
+  return {
+    user: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      birthday: user.birthday,
+      phone: user.phone,
+      skype: user.skype,
+      imgURL: user.imgURL,
+    },
+  };
 };
 
 module.exports = {

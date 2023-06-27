@@ -40,7 +40,7 @@ router.post("/logout", authCheck, logoutController);
 
 router.get("/refresh", authCheck, refreshController);
 
-router.post(
+router.patch(
   "/user",
   authCheck,
   upload.single("avatar"),
