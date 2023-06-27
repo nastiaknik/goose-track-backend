@@ -6,10 +6,15 @@ const {
   deleteTaskController,
   getMonthTasksController,
   getDayTasksController,
+  changeTasksCategoryController,
 } = require("../../conrollers/tasks");
 const { authCheck } = require("../../midllewares/authCheck");
 const validateBody = require("../../midllewares/validateBody");
-const { TaskSchema, SchemaToEditTask } = require("../../schemas/taskSchemas");
+const {
+  TaskSchema,
+  SchemaToEditTask,
+  SchemaToChangeTask,
+} = require("../../schemas/taskSchemas");
 const isValidId = require("../../midllewares/isValidId");
 const {
   validateMonthAndYear,
@@ -41,6 +46,13 @@ router.get(
   authCheck,
   validateDate,
   getDayTasksController
+);
+
+router.patch(
+  "/category/:id",
+  authCheck,
+  validateBody(SchemaToChangeTask),
+  changeTasksCategoryController
 );
 
 module.exports = {

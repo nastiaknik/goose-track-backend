@@ -34,7 +34,12 @@ const SchemaToEditTask = Joi.object({
   category: Joi.string().valid("To do", "In progress", "Done").required(),
 });
 
+const SchemaToChangeTask = Joi.object().keys({
+  category: TaskSchema.extract("category"),
+});
+
 module.exports = {
   TaskSchema,
   SchemaToEditTask,
+  SchemaToChangeTask,
 };

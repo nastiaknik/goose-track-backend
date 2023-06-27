@@ -52,6 +52,18 @@ const getDayTasksService = async (userId, year, month, day) => {
   return tasks;
 };
 
+const changeTasksCategoryService = async (body, id) => {
+  console.log("Hello 2");
+  const changeTasksCategory = await Task.findByIdAndUpdate(id, body, {
+    new: true,
+  });
+
+  if (!changeTasksCategory) {
+    throw new HttpError(404, "Not found");
+  }
+  return changeTasksCategory;
+};
+
 module.exports = {
   getTasksService,
   createTaskService,
@@ -59,4 +71,5 @@ module.exports = {
   deleteTaskService,
   getMonthTasksService,
   getDayTasksService,
+  changeTasksCategoryService,
 };
