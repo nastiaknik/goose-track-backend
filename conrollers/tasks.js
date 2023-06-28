@@ -5,6 +5,7 @@ const {
   deleteTaskService,
   getMonthTasksService,
   getDayTasksService,
+  changeTasksCategoryService,
 } = require("../services/taskServices");
 const controllerWrapper = require("../helpers/controllerWrapper");
 
@@ -45,6 +46,17 @@ const getDayTasksController = controllerWrapper(async (req, res) => {
   res.json(tasksByDay);
 });
 
+const changeTasksCategoryController = controllerWrapper(
+  async (req, res, next) => {
+    const { id } = req.params;
+    const changeTasksController = await changeTasksCategoryService(
+      req.body,
+      id
+    );
+    res.status(200).json(changeTasksController);
+  }
+);
+
 module.exports = {
   getAllTasksController,
   createTaskController,
@@ -52,4 +64,5 @@ module.exports = {
   deleteTaskController,
   getMonthTasksController,
   getDayTasksController,
+  changeTasksCategoryController,
 };
