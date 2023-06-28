@@ -23,17 +23,20 @@ const {
 
 const router = express.Router();
 
-router.get("/", authCheck, getAllTasksController);
+router
+  .route("/")
+  .get(authCheck, getAllTasksController)
+  .post(authCheck, validateBody(TaskSchema), createTaskController);
 
-router.post("/", authCheck, validateBody(TaskSchema), createTaskController);
-router.patch(
-  "/:id",
-  authCheck,
-  isValidId,
-  validateBody(SchemaToEditTask),
-  updateTaskController
-);
-router.delete("/:id", authCheck, isValidId, deleteTaskController);
+router
+  .route("/:id")
+  .patch(
+    authCheck,
+    isValidId,
+    validateBody(SchemaToEditTask),
+    updateTaskController
+  )
+  .delete(authCheck, isValidId, deleteTaskController);
 
 router.get(
   "/month/:year-:month",
