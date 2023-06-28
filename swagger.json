@@ -20,7 +20,8 @@
       "name": "Auth",
       "description": "Authorization endpoints"
     },
-    { "name": "Reviews", "description": "Reviews endpoints" }
+    { "name": "Reviews", "description": "Reviews endpoints" },
+    { "name": "Tasks", "description": "Tasks endpoints" }
   ],
   "paths": {
     "/api/auth/register": {
@@ -495,7 +496,359 @@
             }
           },
           "404": {
-            "description": "Review not foung / Invalid user / Invalid session",
+            "description": "Review not found / Invalid user / Invalid session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get all tasks ",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasksList"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Add task",
+        "security": [{ "Bearer": [] }],
+        "parameters": [],
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "patch": {
+        "tags": ["Tasks"],
+        "summary": "Update task",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Task's id ('id' field in tasks object)",
+            "example": "6438255d9ef48a24e5d81693"
+          }
+        ],
+
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tasks"],
+        "summary": "Delete task",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Task's id ('id' field in tasks object)",
+            "example": "6438255d9ef48a24e5d81693"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/month/{:year-:month}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get tasks by month ",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": ":year-:month",
+            "required": true,
+            "type": "string",
+            "description": "Tasks for the month",
+            "example": "2023-06"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasksList"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/day/{:year-:month-:day}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get tasks by day ",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": ":year-:month-:day",
+            "required": true,
+            "type": "string",
+            "description": "Tasks for the day",
+            "example": "2023-06-07"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasksList"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/category/{id}": {
+      "patch": {
+        "tags": ["Tasks"],
+        "summary": "Update task category",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Task's id ('id' field in tasks object)",
+            "example": "6438255d9ef48a24e5d81693"
+          }
+        ],
+        "requestBody": {
+          "description": "Task category",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCategory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found ",
             "content": {
               "application/json": {
                 "schema": {
@@ -686,7 +1039,7 @@
             "type": "string",
             "description": "comment user's",
             "maxLength": 300,
-            "example": "Good rogram"
+            "example": "Good program"
           },
           "rating": {
             "type": "number",
@@ -704,7 +1057,7 @@
             "type": "string",
             "description": "comment user's",
             "maxLength": 300,
-            "example": "Good rogram"
+            "example": "Good program"
           },
           "rating": {
             "type": "number",
@@ -722,7 +1075,7 @@
             "type": "string",
             "description": "comment user's",
             "maxLength": 300,
-            "example": "Good rogram"
+            "example": "Good program"
           },
           "rating": {
             "type": "number",
@@ -752,6 +1105,182 @@
             "description": "User's rating",
             "maxLength": 1,
             "example": 4
+          }
+        }
+      },
+      "TasksList": {
+        "type": "array",
+        "required": ["title", "priority", "start", "end", "date", "category"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "642fdf8745bc73b2aecbae7b",
+            "description": "Backend-generated unique identifier."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title task",
+            "maxLength": 250,
+            "example": "Task1"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "07:30",
+            "description": "Task start"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Task end"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-06-28",
+            "description": "Time of task start"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "owner": {
+            "type": "string",
+            "example": "642fdf8745bc73b2aecbae7b",
+            "description": "Owner's unique identifier."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-04-12T07:28:49.493Z",
+            "description": "Backend-generated date and time of task creating"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": ["title", "priority", "start", "end", "date", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title task",
+            "maxLength": 250,
+            "example": "Task1"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "Low",
+            "description": "Task priority"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "07:30",
+            "description": "Task start"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Task end"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-06-28",
+            "description": "Time of task start"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          }
+        }
+      },
+      "TaskResponse": {
+        "type": "object",
+        "required": ["title", "priority", "start", "end", "date", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title task",
+            "maxLength": 250,
+            "example": "Task1"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "07:30",
+            "description": "Task start"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Task end"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-06-28",
+            "description": "Time of task start"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Task id",
+            "example": "64975ec51ef898762c594f14"
+          },
+          "owner": {
+            "type": "string",
+            "example": "642fdf8745bc73b2aecbae7b",
+            "description": "Owner's unique identifier."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-04-12T07:28:49.493Z",
+            "description": "Backend-generated date and time of task creating"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-04-12T07:28:49.493Z",
+            "description": "Backend-generated date and time of task updating"
+          }
+        }
+      },
+      "TaskCategory": {
+        "type": "object",
+        "required": ["category"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
           }
         }
       }
