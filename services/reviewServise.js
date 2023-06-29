@@ -8,7 +8,7 @@ const listReviews = async (query) => {
   const rewiews = await Review.find({}, "-createdAt -updateAt", {
     skip,
     limit,
-  }).populate("owner");
+  }).populate("owner", "username imgURL");
   return rewiews;
 };
 
