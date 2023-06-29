@@ -9,7 +9,7 @@ const reviewsEditSchema = Joi.object({
   rating: Joi.number().min(0).max(5),
   comment: Joi.string().max(300),
 })
-  .or("rating", "comment")
+  .or("rating", "comment", "imgURL")
   .required();
 
 module.exports = { reviewsAddSchema, reviewsEditSchema };
