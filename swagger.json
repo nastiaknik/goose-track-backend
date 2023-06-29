@@ -268,7 +268,7 @@
     "/api/reviews": {
       "get": {
         "tags": ["Reviews"],
-        "summary": "Get all reviews users",
+        "summary": "Get all reviews of all users",
         "parameters": [],
         "responses": {
           "200": {
@@ -282,7 +282,7 @@
             }
           },
           "404": {
-            "description": "Reviews not foung",
+            "description": "Reviews not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -345,8 +345,8 @@
     },
     "/api/reviews/my-review": {
       "get": {
-        "tags": ["Reviews"],
-        "summary": "Get all reviews for current user",
+        "tags": ["Review"],
+        "summary": "Get current user's review",
         "security": [{ "Bearer": [] }],
         "parameters": [
           {
@@ -389,7 +389,7 @@
             }
           },
           "404": {
-            "description": "Review not foung / Invalid user / Invalid session",
+            "description": "Review not found / Invalid user / Invalid session",
             "content": {
               "application/json": {
                 "schema": {
@@ -1109,7 +1109,7 @@
         }
       },
       "TasksList": {
-        "type": "array",
+        "type": "object",
         "required": ["title", "priority", "start", "end", "date", "category"],
         "properties": {
           "_id": {
