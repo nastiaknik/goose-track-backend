@@ -343,9 +343,9 @@
         }
       }
     },
-    "/api/reviews/my-review": {
+    "/api/reviews/my-review/{id}": {
       "get": {
-        "tags": ["Review"],
+        "tags": ["Reviews"],
         "summary": "Get current user's review",
         "security": [{ "Bearer": [] }],
         "parameters": [
