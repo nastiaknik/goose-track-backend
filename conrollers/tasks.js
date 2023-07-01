@@ -29,7 +29,7 @@ const updateTaskController = controllerWrapper(async (req, res, next) => {
 const deleteTaskController = controllerWrapper(async (req, res, next) => {
   const { id } = req.params;
   await deleteTaskService(id);
-  res.json({ message: "Task deleted" });
+  res.json({ message: "Task deleted", id });
 });
 
 const getMonthTasksController = controllerWrapper(async (req, res) => {
