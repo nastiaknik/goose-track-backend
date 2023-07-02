@@ -1,14 +1,11 @@
 const { Review } = require("../models/review");
 const HttpError = require("../helpers/HttpError");
 
-const listReviews = async (query) => {
-  const { page = 1, limit = 2 } = query;
-  const skip = (page - 1) * limit;
-
-  const rewiews = await Review.find({}, "-createdAt -updateAt", {
-    skip,
-    limit,
-  }).populate("owner", "username imgURL");
+const listReviews = async () => {
+  const rewiews = await Review.find({}, "-createdAt -updateAt").populate(
+    "owner",
+    "username imgURL"
+  );
   return rewiews;
 };
 
