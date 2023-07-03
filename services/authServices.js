@@ -41,10 +41,20 @@ const verifyUserEmailService = async (verificationToken) => {
     throw new HttpError(404, "User is not found");
   }
 
-  await User.findByIdAndUpdate(currentUser._id, {
-    verify: true,
-    verificationToken: "",
-  });
+  if (currentUser.updatedEmail) {
+    await User.findByIdAndUpdate(currentUser._id, {
+      email: currentUser.updatedEmail,
+      verify: true,
+      verificationToken: "",
+      updatedEmail: "",
+      refreshToken: "",
+    });
+  } else {
+    await User.findByIdAndUpdate(currentUser._id, {
+      verify: true,
+      verificationToken: "",
+    });
+  }
 };
 
 const resendVerifyEmailService = async (body) => {
@@ -63,13 +73,28 @@ const resendVerifyEmailService = async (body) => {
 };
 
 const loginService = async (body) => {
-  const fetchedUser = await User.findOne({ email: body.email });
-  if (!fetchedUser) {
-    throw new HttpError(401, "User with this email is not found");
-  }
+  let fetchedUser;
 
-  if (!fetchedUser.verify) {
-    throw new HttpError(401, "Email is not verified");
+  try {
+    fetchedUser = await User.findOne({ email: body.email });
+    if (!fetchedUser) {
+      throw new HttpError(401, "User with this email is not found");
+    }
+
+    if (!fetchedUser.verify && !fetchedUser.updatedEmail) {
+      throw new HttpError(401, "Email is not verified");
+    }
+  } catch (err) {
+    if (err.message === "User with this email is not found") {
+      fetchedUser = await User.findOne({ updatedEmail: body.email });
+      if (!fetchedUser) {
+        throw new HttpError(401, "User with this email is not found");
+      }
+
+      if (!fetchedUser.verify && fetchedUser.updatedEmail) {
+        throw new HttpError(401, "Email is not verified");
+      }
+    }
   }
 
   const isPasswordCorrect = await bcrypt.compare(
@@ -107,7 +132,7 @@ const logoutService = async (userId) => {
 const refreshService = async (userId) => {
   const fetchedUser = await User.findById(userId);
   if (!fetchedUser) {
-    throw new HttpError(401, "User with this email is not found");
+    throw new HttpError(401, "User with this id is not found");
   }
 
   return {
@@ -124,26 +149,54 @@ const refreshService = async (userId) => {
 };
 
 const updateUserInfoService = async (userId, body) => {
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
+  const fetchedUser = await User.findById(userId);
+  if (!fetchedUser) {
+    throw new HttpError(401, "User with this id is not found");
+  }
+
+  let updatedUser;
+
+  if (fetchedUser.email !== body.email) {
+    const otherUser = await User.findOne({ email: body.email });
+    if (otherUser) {
+      throw new HttpError(409, "User with this email is already in the base");
+    }
+
+    const verificationToken = crypto.randomUUID();
+
+    updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...body,
+        updatedEmail: body.email,
+        email: fetchedUser.email,
+        verificationToken,
+        verify: false,
+      },
+      { new: true }
+    );
+
+    await sendEmail(body.email, verificationToken);
+  } else {
+    updatedUser = await User.findByIdAndUpdate(
       userId,
       { ...body },
       { new: true }
     );
-    return {
-      user: {
-        _id: updatedUser._id,
-        username: updatedUser.username,
-        email: updatedUser.email,
-        birthday: updatedUser.birthday,
-        phone: updatedUser.phone,
-        skype: updatedUser.skype,
-        imgURL: updatedUser.imgURL,
-      },
-    };
-  } catch (error) {
-    throw new HttpError(400, "Failed to update user information");
   }
+
+  return {
+    user: {
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      birthday: updatedUser.birthday,
+      phone: updatedUser.phone,
+      skype: updatedUser.skype,
+      imgURL: updatedUser.imgURL,
+      updatedEmail: updatedUser.updatedEmail,
+    },
+  };
 };
 
 const getUserInfoService = async (userId) => {
