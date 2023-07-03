@@ -30,6 +30,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
+    updatedEmail: {
+      type: String,
+      default: "",
+    },
     refreshToken: String,
   },
   { versionKey: false, timestamps: true }

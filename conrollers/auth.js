@@ -62,8 +62,10 @@ const getUserInfoController = controllerWrapper(async (req, res) => {
 const updateUserInfoController = controllerWrapper(async (req, res, next) => {
   const { _id: userId } = req.user;
   const { file } = req;
+
   if (file) {
     const avatar = await cloudinaryImgSave(file, {}, "avatars");
+
     await User.findByIdAndUpdate(userId, { imgURL: avatar.secure_url });
   }
   const updatedUser = await updateUserInfoService(userId, req.body);
