@@ -455,7 +455,7 @@
             "name": "id",
             "required": true,
             "type": "string",
-            "description": "Review's id ('id' field in review's object)"
+            "description": "User's id"
           }
         ],
         "responses": {
@@ -511,16 +511,16 @@
             "name": "id",
             "required": true,
             "type": "string",
-            "description": "Review's id ('id' field in review's object)"
+            "description": "User's id"
           }
         ],
         "requestBody": {
-          "description": "Review's object. At least one field is required",
+          "description": "Review's changes object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReviewsList"
+                "$ref": "#/components/schemas/ReviewChangeRequest"
               }
             }
           }
@@ -578,7 +578,7 @@
             "name": "id",
             "required": true,
             "type": "string",
-            "description": "Review's id ('id' field in review's object)"
+            "description": "User's id"
           }
         ],
         "responses": {
@@ -609,6 +609,7 @@
         }
       }
     },
+
     "/api/tasks": {
       "get": {
         "tags": ["Tasks"],
@@ -1221,12 +1222,33 @@
         }
       },
       "ReviewsList": {
+        "type": "array",
+        "description": "Array of user's reviews",
+        "items": {
+          "type": "object",
+          "required": ["comment", "rating"],
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "User's comment ",
+              "maxLength": 300,
+              "example": "Good program"
+            },
+            "rating": {
+              "type": "number",
+              "description": "User's rating",
+              "maxLength": 1,
+              "example": 3
+            }
+          }
+        }
+      },
+      "ReviewChangeRequest": {
         "type": "object",
-        "required": ["comment", "rating"],
         "properties": {
           "comment": {
             "type": "string",
-            "description": "comment user's",
+            "description": "User's comment ",
             "maxLength": 300,
             "example": "Good program"
           },
@@ -1236,7 +1258,8 @@
             "maxLength": 1,
             "example": 3
           }
-        }
+        },
+        "minProperties": 1
       },
       "AddReview": {
         "type": "object",
@@ -1298,60 +1321,64 @@
         }
       },
       "TasksList": {
-        "type": "object",
-        "required": ["title", "priority", "start", "end", "date", "category"],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "example": "642fdf8745bc73b2aecbae7b",
-            "description": "Backend-generated unique identifier."
-          },
-          "title": {
-            "type": "string",
-            "description": "Title task",
-            "maxLength": 250,
-            "example": "Task1"
-          },
-          "priority": {
-            "type": "string",
-            "enum": ["low", "medium", "high"],
-            "default": "low",
-            "description": "Task priority"
-          },
-          "start": {
-            "type": "string",
-            "format": "time",
-            "example": "07:30",
-            "description": "Task start"
-          },
-          "end": {
-            "type": "string",
-            "format": "time",
-            "example": "09:30",
-            "description": "Task end"
-          },
-          "date": {
-            "type": "string",
-            "format": "date",
-            "example": "2023-06-28",
-            "description": "Time of task start"
-          },
-          "category": {
-            "type": "string",
-            "enum": ["To do", "In progress", "Done"],
-            "default": "To do",
-            "description": "Task category"
-          },
-          "owner": {
-            "type": "string",
-            "example": "642fdf8745bc73b2aecbae7b",
-            "description": "Owner's unique identifier."
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2023-04-12T07:28:49.493Z",
-            "description": "Backend-generated date and time of task creating"
+        "type": "array",
+        "description": "Array of user's tasks",
+        "items": {
+          "type": "object",
+          "required": ["title", "priority", "start", "end", "date", "category"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "642fdf8745bc73b2aecbae7b",
+              "description": "Backend-generated unique identifier."
+            },
+            "title": {
+              "type": "string",
+              "description": "Title task",
+              "maxLength": 250,
+              "example": "Task1"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "default": "low",
+              "description": "Task priority"
+            },
+            "start": {
+              "type": "string",
+              "format": "time",
+              "example": "07:30",
+              "description": "Task start"
+            },
+            "end": {
+              "type": "string",
+              "format": "time",
+              "example": "09:30",
+              "description": "Task end"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "example": "2023-06-28",
+              "description": "Time of task start"
+            },
+            "category": {
+              "type": "string",
+              "enum": ["To do", "In progress", "Done"],
+              "default": "To do",
+              "description": "Task category"
+            },
+            "owner": {
+              "type": "string",
+              "example": "642fdf8745bc73b2aecbae7b",
+              "description": "Owner's unique identifier."
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-04-12T07:28:49.493Z",
+              "description": "Backend-generated date and time of task creating"
+            }
           }
         }
       },
