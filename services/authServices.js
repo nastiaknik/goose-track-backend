@@ -1,13 +1,10 @@
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
 const HttpError = require("../helpers/HttpError");
 const { User } = require("../models/user");
 const { asignTokens } = require("../helpers/asignTokens");
 const { sendEmail } = require("../helpers/SendGridAPI");
-
-// const { BASE_URL } = process.env;
 
 const signupService = async (body) => {
   const fetchedUser = await User.findOne({ email: body.email });
@@ -201,6 +198,7 @@ const updateUserInfoService = async (userId, body) => {
 
 const getUserInfoService = async (userId) => {
   const user = await User.findById(userId);
+
   return {
     user: {
       _id: user._id,
@@ -210,6 +208,7 @@ const getUserInfoService = async (userId) => {
       phone: user.phone,
       skype: user.skype,
       imgURL: user.imgURL,
+      updatedEmail: user.updatedEmail,
     },
   };
 };
