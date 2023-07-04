@@ -1,4 +1,4 @@
-# Dare Drop Streaming Backend
+# GooseTrack Backend
 
 This backend servise is intended to work with the front-end part of the GooseTrack web-app, created by BioLab team within GoIT academy graduation project.
 
