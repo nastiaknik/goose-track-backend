@@ -38,7 +38,6 @@ const UpdateUserInfoSchema = Joi.object({
     .regex(/^@[a-z0-9_]{1,16}$/)
     .allow(null, ""),
   birthday: Joi.date().iso().max(Date.now()),
-  imgURL: Joi.string().allow(null, ""),
   username: Joi.string().max(16).messages({
     "string.max":
       "username length must be less than or equal to 16 characters long",

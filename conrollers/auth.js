@@ -56,7 +56,7 @@ const getUserInfoController = controllerWrapper(async (req, res) => {
   if (!user) {
     throw new HttpError(404, "User not found");
   }
-  res.json(user);
+  res.status(200).json(user);
 });
 
 const updateUserInfoController = controllerWrapper(async (req, res, next) => {
@@ -69,7 +69,7 @@ const updateUserInfoController = controllerWrapper(async (req, res, next) => {
     await User.findByIdAndUpdate(userId, { imgURL: avatar.secure_url });
   }
   const updatedUser = await updateUserInfoService(userId, req.body);
-  res.json(updatedUser);
+  res.status(200).json(updatedUser);
 });
 
 module.exports = {

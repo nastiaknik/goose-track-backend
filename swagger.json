@@ -5,7 +5,7 @@
     "title": "GooseTrack",
     "description": "Personal to-do list website"
   },
-  "consumes": ["application/json"],
+  "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
   "servers": [
     {
@@ -253,6 +253,107 @@
           },
           "401": {
             "description": "Access errors (authorization or email verification)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/user": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "User info update",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User info changes object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access errors (authorization)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User with this email is already in the base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "User info getter",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access errors (authorization)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -917,6 +1018,44 @@
           }
         }
       },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User's name",
+            "maxLength": 16,
+            "example": "John Dou"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/",
+            "format": "email"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "description": "User's birthday"
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "description": "User's phone number",
+            "example": "+380112233456"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's skype number",
+            "example": "@example123"
+          },
+          "imgURL": {
+            "type": "string",
+            "format": "binary",
+            "description": "User's avatar"
+          }
+        }
+      },
       "RegistrationResponse": {
         "type": "object",
         "properties": {
@@ -1018,6 +1157,56 @@
             "type": "string",
             "description": "Success notification",
             "example": "Verification email is sent"
+          }
+        }
+      },
+      "UserInfoResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string",
+                "description": "User's name",
+                "maxLength": 16,
+                "example": "John Dou"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/",
+                "format": "email"
+              },
+              "birthday": {
+                "type": "string",
+                "format": "date",
+                "description": "User's birthday"
+              },
+              "phone": {
+                "type": "string",
+                "format": "tel",
+                "description": "User's phone number",
+                "example": "+380112233456"
+              },
+              "skype": {
+                "type": "string",
+                "description": "User's skype number",
+                "example": "@example123"
+              },
+              "imgURL": {
+                "type": "string",
+                "format": "uri",
+                "description": "User's avatar",
+                "example": "https://res.cloudinary.com/example/image"
+              },
+              "updatedEmail": {
+                "type": "string",
+                "description": "User's email",
+                "pattern": "^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/",
+                "format": "email"
+              }
+            }
           }
         }
       },
