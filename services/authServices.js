@@ -202,23 +202,6 @@ const updateUserInfoService = async (userId, body) => {
   };
 };
 
-const getUserInfoService = async (userId) => {
-  const user = await User.findById(userId);
-
-  return {
-    user: {
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      birthday: user.birthday,
-      phone: user.phone,
-      skype: user.skype,
-      imgURL: user.imgURL,
-      updatedEmail: user.updatedEmail,
-    },
-  };
-};
-
 module.exports = {
   signupService,
   verifyUserEmailService,
@@ -227,5 +210,4 @@ module.exports = {
   logoutService,
   refreshService,
   updateUserInfoService,
-  getUserInfoService,
 };

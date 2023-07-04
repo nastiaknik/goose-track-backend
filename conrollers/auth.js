@@ -6,12 +6,10 @@ const {
   loginService,
   logoutService,
   refreshService,
-  getUserInfoService,
   updateUserInfoService,
 } = require("../services/authServices");
 const { User } = require("../models/user");
 const cloudinaryImgSave = require("../helpers/cloudinary/cloudinary");
-const HttpError = require("../helpers/HttpError");
 
 const { FRONTEND_REDIR_URL } = process.env;
 
@@ -50,15 +48,6 @@ const refreshController = controllerWrapper(async (req, res, next) => {
   res.status(200).json(currentUser);
 });
 
-const getUserInfoController = controllerWrapper(async (req, res) => {
-  const { _id: userId } = req.user;
-  const user = await getUserInfoService(userId);
-  if (!user) {
-    throw new HttpError(404, "User not found");
-  }
-  res.status(200).json(user);
-});
-
 const updateUserInfoController = controllerWrapper(async (req, res, next) => {
   const { _id: userId } = req.user;
   const { file } = req;
@@ -79,6 +68,5 @@ module.exports = {
   loginController,
   logoutController,
   refreshController,
-  getUserInfoController,
   updateUserInfoController,
 };

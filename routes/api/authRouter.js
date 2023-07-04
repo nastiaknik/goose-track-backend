@@ -14,7 +14,6 @@ const {
   logoutController,
   refreshController,
   updateUserInfoController,
-  getUserInfoController,
 } = require("../../conrollers/auth");
 const upload = require("../../midllewares/upload");
 
@@ -47,8 +46,6 @@ router.patch(
   validateBody(UpdateUserInfoSchema),
   updateUserInfoController
 );
-
-router.get("/current", authCheck, getUserInfoController);
 
 module.exports = {
   authRouter: router,

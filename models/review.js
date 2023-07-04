@@ -14,9 +14,6 @@ const reviewSchema = new Schema(
       type: String,
       maxLength: 300,
     },
-    imgURL: {
-      type: String,
-    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
