@@ -75,17 +75,17 @@ const loginService = async (body) => {
   try {
     fetchedUser = await User.findOne({ email: body.email });
     if (!fetchedUser) {
-      throw new HttpError(401, "User with this email is not found");
+      throw new HttpError(401, "Email or password is not correct");
     }
 
     if (!fetchedUser.verify && !fetchedUser.updatedEmail) {
       throw new HttpError(401, "Email is not verified");
     }
   } catch (err) {
-    if (err.message === "User with this email is not found") {
+    if (err.message === "Email or password is not correct") {
       fetchedUser = await User.findOne({ updatedEmail: body.email });
       if (!fetchedUser) {
-        throw new HttpError(401, "User with this email is not found");
+        throw new HttpError(401, "Email or password is not correct");
       }
 
       if (!fetchedUser.verify && fetchedUser.updatedEmail) {
@@ -99,7 +99,7 @@ const loginService = async (body) => {
     fetchedUser.password
   );
   if (!isPasswordCorrect) {
-    throw new HttpError(401, "Password is not correct");
+    throw new HttpError(401, "Email or password is not correct");
   }
 
   const { refreshToken, accessToken } = asignTokens(fetchedUser);
@@ -123,6 +123,11 @@ const loginService = async (body) => {
 };
 
 const logoutService = async (userId) => {
+  const fetchedUser = await User.findById(userId);
+  if (!fetchedUser) {
+    throw new HttpError(401, "User with this id is not found");
+  }
+
   await User.findByIdAndUpdate(userId, { refreshToken: null });
 };
 
@@ -141,6 +146,7 @@ const refreshService = async (userId) => {
       phone: fetchedUser.phone,
       skype: fetchedUser.skype,
       imgURL: fetchedUser.imgURL,
+      updatedEmail: fetchedUser.updatedEmail,
     },
   };
 };
