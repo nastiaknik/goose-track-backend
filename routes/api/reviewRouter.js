@@ -5,7 +5,7 @@ const {
   addReview,
   updateReview,
   removeReview,
-} = require("../../conrollers/reviews");
+} = require("../../controllers/reviews");
 const { authCheck } = require("../../midllewares/authCheck");
 const validateBody = require("../../midllewares/validateBody");
 const {
