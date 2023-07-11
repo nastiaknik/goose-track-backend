@@ -20,8 +20,13 @@ const signupController = controllerWrapper(async (req, res, next) => {
 
 const activationController = controllerWrapper(async (req, res, next) => {
   const { verificationToken } = req.params;
-  await verifyUserEmailService(verificationToken);
-  res.status(200).redirect(FRONTEND_REDIR_URL);
+  const { accessToken } = await verifyUserEmailService(verificationToken);
+  res
+    .status(200)
+    .cookie("access_token", `${accessToken}`, {
+      expires: new Date(Date.now() + 3600000), // cookie will be removed after 1 hour
+    })
+    .redirect(FRONTEND_REDIR_URL);
 });
 
 const resendActivatinEmailController = controllerWrapper(

@@ -38,20 +38,27 @@ const verifyUserEmailService = async (verificationToken) => {
     throw new HttpError(404, "User is not found");
   }
 
+  const { refreshToken, accessToken } = asignTokens(currentUser);
+
   if (currentUser.updatedEmail) {
     await User.findByIdAndUpdate(currentUser._id, {
       email: currentUser.updatedEmail,
       verify: true,
       verificationToken: "",
       updatedEmail: "",
-      refreshToken: "",
+      refreshToken,
     });
   } else {
     await User.findByIdAndUpdate(currentUser._id, {
       verify: true,
       verificationToken: "",
+      refreshToken,
     });
   }
+
+  return {
+    accessToken,
+  };
 };
 
 const resendVerifyEmailService = async (body) => {
