@@ -7,7 +7,7 @@ const {
   getMonthTasksController,
   getDayTasksController,
   changeTasksCategoryController,
-} = require("../../conrollers/tasks");
+} = require("../../controllers/tasks");
 const { authCheck } = require("../../midllewares/authCheck");
 const validateBody = require("../../midllewares/validateBody");
 const {

@@ -50,7 +50,7 @@ const UpdateUserInfoSchema = Joi.object({
       "string.pattern.base": "email contains invalide option",
     }),
 })
-  .or("username", "email", "phone", "skype", "birthday", "imgURL")
+  .or("username", "email", "phone", "skype", "birthday")
   .required();
 
 module.exports = {

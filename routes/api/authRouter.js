@@ -14,7 +14,7 @@ const {
   logoutController,
   refreshController,
   updateUserInfoController,
-} = require("../../conrollers/auth");
+} = require("../../controllers/auth");
 const upload = require("../../midllewares/upload");
 
 const { authCheck } = require("../../midllewares/authCheck");
@@ -42,7 +42,7 @@ router.get("/refresh", authCheck, refreshController);
 router.patch(
   "/user",
   authCheck,
-  upload.single("imgURL"),
+  upload.single("photo"),
   validateBody(UpdateUserInfoSchema),
   updateUserInfoController
 );
