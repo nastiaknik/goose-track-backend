@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDoc = require("./swagger.json");
 
@@ -17,6 +18,7 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static("public"));
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
