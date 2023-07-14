@@ -5,6 +5,7 @@ const {
   EmailSchema,
   UserLoginSchema,
   UpdateUserInfoSchema,
+  UserPasswordRecoverySchema,
 } = require("../../schemas/userSchemas");
 const {
   signupController,
@@ -15,6 +16,7 @@ const {
   refreshController,
   updateUserInfoController,
   sendRecoveryEmailController,
+  changeUserPasswordController,
 } = require("../../controllers/auth");
 const upload = require("../../midllewares/upload");
 
@@ -50,7 +52,11 @@ router.patch(
 
 router
   .route("/recovery")
-  .post(validateBody(EmailSchema), sendRecoveryEmailController);
+  .post(validateBody(EmailSchema), sendRecoveryEmailController)
+  .patch(
+    validateBody(UserPasswordRecoverySchema),
+    changeUserPasswordController
+  );
 
 module.exports = {
   authRouter: router,

@@ -53,9 +53,20 @@ const UpdateUserInfoSchema = Joi.object({
   .or("username", "email", "phone", "skype", "birthday")
   .required();
 
+const UserPasswordRecoverySchema = Joi.object({
+  id: Joi.string().required().messages({
+    "any.required": "field 'id' is missing",
+  }),
+  password: Joi.string().min(6).required().messages({
+    "any.required": "field 'password' is missing",
+    "string.min": "password length must be at least 6 characters long",
+  }),
+});
+
 module.exports = {
   UserRegistrationSchema,
   EmailSchema,
   UserLoginSchema,
   UpdateUserInfoSchema,
+  UserPasswordRecoverySchema,
 };

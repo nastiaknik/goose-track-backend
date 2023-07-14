@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const HttpError = require("../helpers/HttpError");
 const { User } = require("../models/user");
-const { asignTokens } = require("../helpers/asignTokens");
+const { asignTokens, asignRecoveryId } = require("../helpers/asignTokens");
 const {
   sendEmail,
   sendPasswordRecoveryEmail,
@@ -220,9 +221,48 @@ const sendRecoveryEmailService = async (body) => {
     throw new HttpError(404, "User is not found");
   }
 
-  const hashUserId = await bcrypt.hash(currentUser.id, 12);
+  const { recoveryId } = asignRecoveryId(currentUser);
 
-  await sendPasswordRecoveryEmail(email, hashUserId);
+  await sendPasswordRecoveryEmail(email, recoveryId);
+};
+
+const changeUserPasswordService = async (body) => {
+  const { id, password } = body;
+
+  const decodedPayload = jwt.decode(id);
+
+  if (!decodedPayload) {
+    throw new HttpError(400, "RecoveryId is unvalid");
+  }
+
+  const currentUser = await User.findById(decodedPayload.id);
+
+  if (!currentUser) {
+    throw new HttpError(401, "User is not found or recoveryId is unvalid");
+  }
+
+  const hashPassword = await bcrypt.hash(password, 12);
+
+  const updatedUser = await User.findByIdAndUpdate(
+    currentUser._id,
+    {
+      password: hashPassword,
+    },
+    { new: true }
+  );
+
+  return {
+    user: {
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      birthday: updatedUser.birthday,
+      phone: updatedUser.phone,
+      skype: updatedUser.skype,
+      imgURL: updatedUser.imgURL,
+      updatedEmail: updatedUser.updatedEmail,
+    },
+  };
 };
 
 module.exports = {
@@ -234,4 +274,5 @@ module.exports = {
   refreshService,
   updateUserInfoService,
   sendRecoveryEmailService,
+  changeUserPasswordService,
 };

@@ -8,6 +8,7 @@ const {
   refreshService,
   updateUserInfoService,
   sendRecoveryEmailService,
+  changeUserPasswordService,
 } = require("../services/authServices");
 const { User } = require("../models/user");
 const cloudinaryImgSave = require("../helpers/cloudinary/cloudinary");
@@ -74,6 +75,13 @@ const sendRecoveryEmailController = controllerWrapper(
   }
 );
 
+const changeUserPasswordController = controllerWrapper(
+  async (req, res, next) => {
+    await changeUserPasswordService(req.body);
+    res.status(200).redirect(`${FRONTEND_BASE_URL}/login`);
+  }
+);
+
 module.exports = {
   signupController,
   activationController,
@@ -83,4 +91,5 @@ module.exports = {
   refreshController,
   updateUserInfoController,
   sendRecoveryEmailController,
+  changeUserPasswordController,
 };
