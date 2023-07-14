@@ -14,6 +14,7 @@ const {
   logoutController,
   refreshController,
   updateUserInfoController,
+  sendRecoveryEmailController,
 } = require("../../controllers/auth");
 const upload = require("../../midllewares/upload");
 
@@ -46,6 +47,10 @@ router.patch(
   validateBody(UpdateUserInfoSchema),
   updateUserInfoController
 );
+
+router
+  .route("/recovery")
+  .post(validateBody(EmailSchema), sendRecoveryEmailController);
 
 module.exports = {
   authRouter: router,
