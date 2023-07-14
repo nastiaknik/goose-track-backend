@@ -6,6 +6,8 @@ const {
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
+  RECOVERY_ID_SECRET,
+  RECOVERY_ID_EXPIRES_IN,
 } = process.env;
 
 const asignTokens = (user) => {
@@ -26,6 +28,20 @@ const asignTokens = (user) => {
   };
 };
 
+const asignRecoveryId = (user) => {
+  const payload = {
+    id: user._id,
+  };
+
+  const recoveryId = jwt.sign(payload, RECOVERY_ID_SECRET, {
+    expiresIn: RECOVERY_ID_EXPIRES_IN,
+  });
+
+  return {
+    recoveryId,
+  };
+};
 module.exports = {
   asignTokens,
+  asignRecoveryId,
 };

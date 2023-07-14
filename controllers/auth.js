@@ -7,11 +7,13 @@ const {
   logoutService,
   refreshService,
   updateUserInfoService,
+  sendRecoveryEmailService,
+  changeUserPasswordService,
 } = require("../services/authServices");
 const { User } = require("../models/user");
 const cloudinaryImgSave = require("../helpers/cloudinary/cloudinary");
 
-const { FRONTEND_REDIR_URL } = process.env;
+const { FRONTEND_BASE_URL } = process.env;
 
 const signupController = controllerWrapper(async (req, res, next) => {
   const newUser = await signupService(req.body);
@@ -26,7 +28,7 @@ const activationController = controllerWrapper(async (req, res, next) => {
     .cookie("access_token", `${accessToken}`, {
       expires: new Date(Date.now() + 3600000), // cookie will be removed after 1 hour
     })
-    .redirect(FRONTEND_REDIR_URL);
+    .redirect(`${FRONTEND_BASE_URL}/login`);
 });
 
 const resendActivatinEmailController = controllerWrapper(
@@ -66,6 +68,20 @@ const updateUserInfoController = controllerWrapper(async (req, res, next) => {
   res.status(200).json(updatedUser);
 });
 
+const sendRecoveryEmailController = controllerWrapper(
+  async (req, res, next) => {
+    await sendRecoveryEmailService(req.body);
+    res.status(200).json({ message: "Recovery email is sent" });
+  }
+);
+
+const changeUserPasswordController = controllerWrapper(
+  async (req, res, next) => {
+    await changeUserPasswordService(req.body);
+    res.status(200).redirect(`${FRONTEND_BASE_URL}/login`);
+  }
+);
+
 module.exports = {
   signupController,
   activationController,
@@ -74,4 +90,6 @@ module.exports = {
   logoutController,
   refreshController,
   updateUserInfoController,
+  sendRecoveryEmailController,
+  changeUserPasswordController,
 };

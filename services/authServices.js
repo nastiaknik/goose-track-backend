@@ -1,10 +1,14 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const HttpError = require("../helpers/HttpError");
 const { User } = require("../models/user");
-const { asignTokens } = require("../helpers/asignTokens");
-const { sendEmail } = require("../helpers/SendGridAPI");
+const { asignTokens, asignRecoveryId } = require("../helpers/asignTokens");
+const {
+  sendEmail,
+  sendPasswordRecoveryEmail,
+} = require("../helpers/SendGridAPI");
 
 const signupService = async (body) => {
   const fetchedUser = await User.findOne({ email: body.email });
@@ -209,6 +213,58 @@ const updateUserInfoService = async (userId, body) => {
   };
 };
 
+const sendRecoveryEmailService = async (body) => {
+  const { email } = body;
+
+  const currentUser = await User.findOne({ email });
+  if (!currentUser) {
+    throw new HttpError(404, "User is not found");
+  }
+
+  const { recoveryId } = asignRecoveryId(currentUser);
+
+  await sendPasswordRecoveryEmail(email, recoveryId);
+};
+
+const changeUserPasswordService = async (body) => {
+  const { id, password } = body;
+
+  const decodedPayload = jwt.decode(id);
+
+  if (!decodedPayload) {
+    throw new HttpError(400, "RecoveryId is unvalid");
+  }
+
+  const currentUser = await User.findById(decodedPayload.id);
+
+  if (!currentUser) {
+    throw new HttpError(401, "User is not found or recoveryId is unvalid");
+  }
+
+  const hashPassword = await bcrypt.hash(password, 12);
+
+  const updatedUser = await User.findByIdAndUpdate(
+    currentUser._id,
+    {
+      password: hashPassword,
+    },
+    { new: true }
+  );
+
+  return {
+    user: {
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      birthday: updatedUser.birthday,
+      phone: updatedUser.phone,
+      skype: updatedUser.skype,
+      imgURL: updatedUser.imgURL,
+      updatedEmail: updatedUser.updatedEmail,
+    },
+  };
+};
+
 module.exports = {
   signupService,
   verifyUserEmailService,
@@ -217,4 +273,6 @@ module.exports = {
   logoutService,
   refreshService,
   updateUserInfoService,
+  sendRecoveryEmailService,
+  changeUserPasswordService,
 };
