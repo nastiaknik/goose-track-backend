@@ -223,6 +223,10 @@ const sendRecoveryEmailService = async (body) => {
 
   const { recoveryId } = asignRecoveryId(currentUser);
 
+  await User.findByIdAndUpdate(currentUser._id, {
+    recoveryId,
+  });
+
   await sendPasswordRecoveryEmail(email, recoveryId);
 };
 
@@ -237,7 +241,7 @@ const changeUserPasswordService = async (body) => {
 
   const currentUser = await User.findById(decodedPayload.id);
 
-  if (!currentUser) {
+  if (!currentUser || !currentUser.recoveryId) {
     throw new HttpError(401, "User is not found or recoveryId is unvalid");
   }
 
@@ -247,6 +251,7 @@ const changeUserPasswordService = async (body) => {
     currentUser._id,
     {
       password: hashPassword,
+      recoveryId: "",
     },
     { new: true }
   );
