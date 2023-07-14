@@ -78,7 +78,7 @@ const sendRecoveryEmailController = controllerWrapper(
 const changeUserPasswordController = controllerWrapper(
   async (req, res, next) => {
     await changeUserPasswordService(req.body);
-    res.status(200).redirect(`${FRONTEND_BASE_URL}/login`);
+    res.status(200).json({ message: "Password is successfuly changed" });
   }
 );
 

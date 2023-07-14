@@ -325,6 +325,104 @@
         }
       }
     },
+    "/api/auth/recovery": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User recovery email send",
+        "parameters": [],
+        "requestBody": {
+          "description": "User recovery email object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailVerificationResendRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "User password change",
+        "parameters": [],
+        "requestBody": {
+          "description": "User password object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is not found or recoveryId is unvalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/api/reviews": {
       "get": {
@@ -1017,6 +1115,23 @@
           }
         }
       },
+      "PasswordChangeRequest": {
+        "type": "object",
+        "required": ["id", "password"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's recoveryId string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1YmI5ODA2NmM0N2JhZGM1M2MwYSIsImlhdCI6MTY4OTM2MDk4OSwiZXhwIjoxNjg5MzYxODg5fQ.fpjevAM2nrrLn6GGgvW6nQXrcL4jTuM3DOKFY-D_fuI"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "minLength": 6,
+            "example": "qwerty123"
+          }
+        }
+      },
       "RegistrationResponse": {
         "type": "object",
         "properties": {
@@ -1117,7 +1232,7 @@
           "message": {
             "type": "string",
             "description": "Success notification",
-            "example": "Verification email is sent"
+            "example": "Here is success message"
           }
         }
       },
