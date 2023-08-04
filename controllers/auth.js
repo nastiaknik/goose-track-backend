@@ -9,6 +9,7 @@ const {
   updateUserInfoService,
   sendRecoveryEmailService,
   changeUserPasswordService,
+  googleCallbackService,
 } = require("../services/authServices");
 const { User } = require("../models/user");
 const cloudinaryImgSave = require("../helpers/cloudinary/cloudinary");
@@ -82,6 +83,13 @@ const changeUserPasswordController = controllerWrapper(
   }
 );
 
+const googleCallbackController = controllerWrapper(async (req, res, next) => {
+  const { accessToken } = await googleCallbackService(req.user);
+  res
+    .status(200)
+    .redirect(`${FRONTEND_BASE_URL}/login?accessToken=${accessToken}`);
+});
+
 module.exports = {
   signupController,
   activationController,
@@ -92,4 +100,5 @@ module.exports = {
   updateUserInfoController,
   sendRecoveryEmailController,
   changeUserPasswordController,
+  googleCallbackController,
 };

@@ -17,8 +17,10 @@ const {
   updateUserInfoController,
   sendRecoveryEmailController,
   changeUserPasswordController,
+  googleCallbackController,
 } = require("../../controllers/auth");
 const upload = require("../../midllewares/upload");
+const { passport } = require("../../midllewares/googleAuth");
 
 const { authCheck } = require("../../midllewares/authCheck");
 
@@ -57,6 +59,17 @@ router
     validateBody(UserPasswordRecoverySchema),
     changeUserPasswordController
   );
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  googleCallbackController
+);
 
 module.exports = {
   authRouter: router,
