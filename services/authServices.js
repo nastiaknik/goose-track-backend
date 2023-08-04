@@ -270,6 +270,23 @@ const changeUserPasswordService = async (body) => {
   };
 };
 
+const googleCallbackService = async (body) => {
+  const fetchedUser = await User.findOne({ email: body.email });
+  if (!fetchedUser) {
+    throw new HttpError(401, "Email or password is not correct");
+  }
+
+  const { refreshToken, accessToken } = asignTokens(fetchedUser);
+
+  await User.findByIdAndUpdate(fetchedUser._id, {
+    refreshToken,
+  });
+
+  return {
+    accessToken,
+  };
+};
+
 module.exports = {
   signupService,
   verifyUserEmailService,
@@ -280,4 +297,5 @@ module.exports = {
   updateUserInfoService,
   sendRecoveryEmailService,
   changeUserPasswordService,
+  googleCallbackService,
 };
